@@ -13,6 +13,6 @@ public class JdbcRunner {
 		try (var connection = ConnectionManager.open()) {
 			System.out.println(connection.getTransactionIsolation());
 		}
-
+		System.out.println(driverClass.getClassLoader());
 	}
 }
