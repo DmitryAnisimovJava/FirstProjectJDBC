@@ -15,6 +15,10 @@ public final class PropertiesUtil {
 	private PropertiesUtil() {
 	}
 
+	public static String get(String key) {
+		return PROPERTIES.getProperty(key);
+	}
+
 	// OR use
 	// PropertiesUtil.class.getCLassLoader().getResourceAsStream("application.properties")
 	// for absolute path to .classpath root folder
