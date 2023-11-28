@@ -45,6 +45,8 @@ public class JdbcRunner {
 		String sqlInsert = """
 				INSERT INTO info (name)
 				VALUES
+				('TestGenerated'),
+				('TestGenerated'),
 				('TestGenerated');
 				""";
 		try (var connection = ConnectionManager.open();
