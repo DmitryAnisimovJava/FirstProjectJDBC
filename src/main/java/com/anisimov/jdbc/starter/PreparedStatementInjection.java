@@ -25,6 +25,9 @@ public class PreparedStatementInjection {
 				""";
 		List<Integer> result = new ArrayList<>();
 		try (var connection = ConnectionManager.open(); var prepareStatement = connection.prepareStatement(sql)) {
+			prepareStatement.setFetchSize(50);
+			prepareStatement.setQueryTimeout(10);
+			prepareStatement.setMaxRows(100);
 			prepareStatement.setTimestamp(1, Timestamp.valueOf(starTime));
 			System.out.println(prepareStatement);
 			prepareStatement.setTimestamp(2, Timestamp.valueOf(endTime));
