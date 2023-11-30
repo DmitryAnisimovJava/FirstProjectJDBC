@@ -32,5 +32,5 @@ public final class ConnectionManager {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	};
+	}
 }

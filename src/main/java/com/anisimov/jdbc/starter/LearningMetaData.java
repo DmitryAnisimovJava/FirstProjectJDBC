@@ -2,16 +2,20 @@ package com.anisimov.jdbc.starter;
 
 import java.sql.SQLException;
 
-import com.anisimov.jdbc.starter.util.ConnectionManager;
+import com.anisimov.jdbc.starter.util.ConnectionPoolManager;
 
 public class LearningMetaData {
 
 	public static void main(String[] args) throws SQLException {
-		LearningMetaData.checkMetadate();
+		try {
+			LearningMetaData.checkMetadate();
+		} finally {
+			ConnectionPoolManager.closePool();
+		}
 	}
 
 	private static void checkMetadate() throws SQLException {
-		try (var connection = ConnectionManager.open()) {
+		try (var connection = ConnectionPoolManager.get()) {
 			var metaData = connection.getMetaData();
 			var catalogs = metaData.getCatalogs();
 			String catalog = null;
@@ -35,5 +39,4 @@ public class LearningMetaData {
 			}
 		}
 	}
-
 }
