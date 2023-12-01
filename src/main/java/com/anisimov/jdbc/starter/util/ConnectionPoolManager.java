@@ -15,7 +15,7 @@ public class ConnectionPoolManager {
 	private static final String PASSWORD_KEY = "db.password";
 	private static final String URL_KEY = "db.url";
 	private static final String POOL_SIZE_KEY = "db.max.pool";
-	private static final Integer dEFAULT_POOL_SIZEInteger = 10;
+	private static final Integer DEFAULT_POOL_SIZE = 10;
 	private static BlockingQueue<Connection> connectionPool;
 	private static List<Connection> openedConnections;
 
@@ -29,7 +29,7 @@ public class ConnectionPoolManager {
 
 	private static void initPool() {
 		String poolSizeFromKey = PropertiesUtil.get(POOL_SIZE_KEY);
-		int poolSize = poolSizeFromKey == null ? 10 : Integer.parseInt(poolSizeFromKey);
+		int poolSize = poolSizeFromKey == null ? DEFAULT_POOL_SIZE : Integer.parseInt(poolSizeFromKey);
 		connectionPool = new ArrayBlockingQueue<>(poolSize);
 		openedConnections = new ArrayList<>();
 		for (int i = 0; i < poolSize; i++) {
