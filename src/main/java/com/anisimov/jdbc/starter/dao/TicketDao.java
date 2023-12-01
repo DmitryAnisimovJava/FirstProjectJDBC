@@ -1,7 +1,10 @@
 package com.anisimov.jdbc.starter.dao;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.anisimov.jdbc.starter.entity.TicketEntity;
@@ -22,15 +25,15 @@ public class TicketDao {
 
 	private static String SQL_UPDATE = """
 			UPDATE ticket
-			SET passenger_no = ?
-				passenger_name = ?
-				seat_no = ?
-				flight_id = ?
+			SET passenger_no = ?,
+				passenger_name = ?,
+				seat_no = ?,
+				flight_id = ?,
 				cost = ?
 			WHERE id = ?
 			""";
 
-	private static String FIND_BY_ID = """
+	private static String FIND_ALL = """
 			SELECT id,
 				passenger_no,
 				passenger_name,
@@ -38,6 +41,9 @@ public class TicketDao {
 				flight_id,
 				cost
 			FROM ticket
+			""";
+
+	private static String FIND_BY_ID = FIND_ALL + """
 			WHERE id = ?
 			""";
 
@@ -48,7 +54,27 @@ public class TicketDao {
 		return INSTANCE;
 	}
 
-	public static boolean delete(Integer id) {
+	public List<TicketEntity> findAllColumns() {
+		try (var connection = ConnectionPoolManager.get();
+				var prepareStatement = connection.prepareStatement(FIND_ALL)) {
+			var executeQuery = prepareStatement.executeQuery();
+			List<TicketEntity> listOfRows = new ArrayList<>();
+			while (executeQuery.next()) {
+				listOfRows.add(buildTicket(executeQuery));
+			}
+			return listOfRows;
+		} catch (SQLException e) {
+			throw new DaoException(e);
+		}
+	}
+
+	private TicketEntity buildTicket(ResultSet executeQuery) throws SQLException {
+		return new TicketEntity(executeQuery.getInt("id"), executeQuery.getString("passenger_no"),
+				executeQuery.getString("passenger_name"), executeQuery.getString("seat_no"),
+				executeQuery.getInt("flight_id"), executeQuery.getInt("cost"));
+	}
+
+	public boolean delete(Integer id) {
 		try (var connectionPool = ConnectionPoolManager.get();
 				var prepareStatement = connectionPool.prepareStatement(SQL_DELETE)) {
 			prepareStatement.setInt(1, id);
@@ -58,7 +84,7 @@ public class TicketDao {
 		}
 	}
 
-	public static TicketEntity create(TicketEntity ticket) {
+	public TicketEntity create(TicketEntity ticket) {
 		try (var connection = ConnectionPoolManager.get();
 				var prepareStatement = connection.prepareStatement(SQL_CREATE, Statement.RETURN_GENERATED_KEYS)) {
 			prepareStatement.setString(1, ticket.getPassengerNo());
@@ -77,7 +103,7 @@ public class TicketDao {
 		}
 	}
 
-	public static boolean update(TicketEntity ticket, Integer id) {
+	public boolean update(TicketEntity ticket, Integer id) {
 		try (var connection = ConnectionPoolManager.get();
 				var prepareStatement = connection.prepareStatement(SQL_UPDATE)) {
 			prepareStatement.setString(1, ticket.getPassengerNo());
@@ -93,14 +119,17 @@ public class TicketDao {
 		}
 	}
 
-	private static Optional<TicketEntity> findById(Integer id) {
+	public Optional<TicketEntity> findById(Integer id) {
 		try (var connection = ConnectionPoolManager.get();
 				var prepareStatement = connection.prepareStatement(FIND_BY_ID)) {
 			prepareStatement.setInt(1, id);
 			var executeQuery = prepareStatement.executeQuery();
+			TicketEntity ticket = null;
 			if (executeQuery.next()) {
-				executeQuery.
+				ticket = buildTicket(executeQuery);
 			}
+
+			return Optional.ofNullable(ticket);
 		} catch (SQLException e) {
 			throw new DaoException(e);
 		}
