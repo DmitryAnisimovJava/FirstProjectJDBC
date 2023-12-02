@@ -3,12 +3,14 @@ package com.anisimov.jdbc.starter;
 import java.util.Iterator;
 
 import com.anisimov.jdbc.starter.dao.TicketDao;
+import com.anisimov.jdbc.starter.dto.DtoTicket;
 import com.anisimov.jdbc.starter.entity.TicketEntity;
 
 public class DaoTest {
 
 	public static void main(String[] args) {
-		getAll();
+		var find = TicketDao.getInstance().find(new DtoTicket(3, 1, "B2", 250, null));
+		System.out.println(find);
 	}
 
 	private static void getAll() {

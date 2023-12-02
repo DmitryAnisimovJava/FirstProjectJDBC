@@ -6,17 +6,17 @@ public class TicketEntity {
 	private String passengerNo;
 	private String passengerName;
 	private String seatNo;
-	private Integer flightId;
+	private FlightEntity flight;
 	private Integer cost;
 
-	public TicketEntity(Integer id, String passengerNo, String passengerName, String seatNo, Integer flightId,
+	public TicketEntity(Integer id, String passengerNo, String passengerName, String seatNo, FlightEntity flight,
 			Integer cost) {
 		super();
 		this.id = id;
 		this.passengerNo = passengerNo;
 		this.passengerName = passengerName;
 		this.seatNo = seatNo;
-		this.flightId = flightId;
+		this.flight = flight;
 		this.cost = cost;
 	}
 
@@ -55,12 +55,12 @@ public class TicketEntity {
 		this.seatNo = seatNo;
 	}
 
-	public Integer getFlightId() {
-		return flightId;
+	public FlightEntity getFlightId() {
+		return flight;
 	}
 
-	public void setFlightId(Integer flightId) {
-		this.flightId = flightId;
+	public void setFlightId(FlightEntity flightId) {
+		this.flight = flightId;
 	}
 
 	public Integer getCost() {
@@ -74,7 +74,7 @@ public class TicketEntity {
 	@Override
 	public String toString() {
 		return "TicketEntity [id=" + id + ", passengerNo=" + passengerNo + ", passengerName=" + passengerName
-				+ ", seatNo=" + seatNo + ", flightId=" + flightId + ", cost=" + cost + "]";
+				+ ", seatNo=" + seatNo + ", flightId=" + flight + ", cost=" + cost + "]";
 	}
 
 }
